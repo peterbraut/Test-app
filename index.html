@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pickleball Turnering – Kampvisning</title>
+  <link rel="stylesheet" href="src/styles/main.css" />
+</head>
+<body>
+
+  <header>
+    <h1 id="tournament-name">Pickleball Turnering</h1>
+    <a href="admin.html" class="header-link">Admin</a>
+  </header>
+
+  <main>
+
+    <div id="no-tournament" class="empty-state">
+      <p>Ingen aktiv turnering.<br>
+         Gå til <a href="admin.html">admin-skjermen</a> for å starte.</p>
+    </div>
+
+    <div id="tournament-view" style="display:none">
+
+      <div class="section-label live">
+        <span class="pulse"></span> Spilles nå
+      </div>
+      <div class="match-grid" id="playing-grid"></div>
+
+      <div class="section-label next">Neste kamp</div>
+      <div class="match-grid" id="next-grid"></div>
+
+      <div class="section-label wait">Venteraden</div>
+      <div class="match-grid" id="standby-grid"></div>
+
+      <div class="section-divider"><span>Ferdigspilte kamper</span></div>
+
+      <div class="match-grid" id="completed-grid"></div>
+
+    </div>
+
+  </main>
+
+  <script src="src/js/tournament.js"></script>
+  <script src="src/js/app.js"></script>
+</body>
+</html>
