@@ -22,10 +22,11 @@ function render() {
   document.getElementById('tournament-name').textContent = state.tournament.name;
 
   const byStatus = s => state.matches.filter(m => m.status === s);
+  const courts = state.tournament.courtsCount;
 
   renderGrid('playing-grid', state, byStatus('playing'), 'playing');
-  renderGrid('next-grid', state, byStatus('on_deck'), 'next');
-  renderGrid('standby-grid', state, byStatus('standby'), 'standby');
+  renderGrid('next-grid', state, nextDisplay(state, courts), 'next');
+  renderGrid('standby-grid', state, standbyDisplay(state, courts), 'standby');
 
   const completed = byStatus('completed').sort((a, b) => b.completedAt - a.completedAt);
   renderCompleted(state, completed);
@@ -78,6 +79,22 @@ function completedCardHTML(state, m) {
         <span class="team ${w1 ? 'loser' : 'winner'}">${t2}</span>
       </div>
     </div>`;
+}
+
+// Always show upcoming matches even when those teams are still playing
+function nextDisplay(state, courts) {
+  const onDeck = state.matches.filter(m => m.status === 'on_deck');
+  if (onDeck.length >= courts) return onDeck;
+  const scheduled = state.matches.filter(m => m.status === 'scheduled');
+  return [...onDeck, ...scheduled].slice(0, courts);
+}
+
+function standbyDisplay(state, courts) {
+  const standby = state.matches.filter(m => m.status === 'standby');
+  if (standby.length >= courts) return standby;
+  const nextIds = new Set(nextDisplay(state, courts).map(m => m.id));
+  const scheduled = state.matches.filter(m => m.status === 'scheduled' && !nextIds.has(m.id));
+  return [...standby, ...scheduled].slice(0, courts);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
