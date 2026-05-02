@@ -3,20 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Test App</title>
+  <title>Pickleball Turnering – Kampvisning</title>
   <link rel="stylesheet" href="../src/styles/main.css" />
 </head>
 <body>
+
   <header>
-    <h1>Velkommen til Test App</h1>
+    <h1 id="tournament-name">Pickleball Turnering</h1>
+    <a href="admin.html" class="header-link">Admin</a>
   </header>
 
   <main>
-    <p>Her begynner appen din!</p>
+
+    <!-- Vist kun når ingen turnering er aktiv -->
+    <div id="no-tournament" class="empty-state">
+      <p>Ingen aktiv turnering.<br>
+         Gå til <a href="admin.html">admin-skjermen</a> for å starte.</p>
+    </div>
+
+    <!-- Kampvisning -->
+    <div id="tournament-view" style="display:none">
+
+      <!-- Rad 1: Spilles nå -->
+      <div class="section-label live">
+        <span class="pulse"></span> Spilles nå
+      </div>
+      <div class="match-grid" id="playing-grid"></div>
+
+      <!-- Rad 2: Neste kamp -->
+      <div class="section-label next">Neste kamp</div>
+      <div class="match-grid" id="next-grid"></div>
+
+      <!-- Rad 3: Venteraden -->
+      <div class="section-label wait">Venteraden</div>
+      <div class="match-grid" id="standby-grid"></div>
+
+      <!-- Skillelinje -->
+      <div class="section-divider"><span>Ferdigspilte kamper</span></div>
+
+      <!-- Ferdigspilte kamper -->
+      <div class="match-grid" id="completed-grid"></div>
+
+    </div>
+
   </main>
 
-  <footer>
-    <p>&copy; 2026</p>
-  </footer>
+  <script src="../src/js/tournament.js"></script>
+  <script src="../src/js/app.js"></script>
 </body>
 </html>
