@@ -110,32 +110,54 @@ function adminMatchCard(state, m) {
     scheduled: '<span class="tag-sched">Planlagt</span>'
   };
 
+  const btns = Array.from({ length: 12 }, (_, i) =>
+    `<button type="button" class="score-btn" data-score="${i}">${i}</button>`
+  ).join('');
+
   const div = document.createElement('div');
   div.className = `admin-card status-${m.status}`;
   div.innerHTML = `
     <div class="card-meta">${tags[m.status]} · ${g} · Runde ${m.round}</div>
-    <div class="card-teams"><strong>${t1}</strong> mot <strong>${t2}</strong></div>
-    <form class="score-form">
-      <label class="score-label">${t1}</label>
-      <input type="number" name="s1" min="0" max="25" class="score-inp" placeholder="0" />
-      <span class="score-dash">–</span>
-      <input type="number" name="s2" min="0" max="25" class="score-inp" placeholder="0" />
-      <label class="score-label">${t2}</label>
-      <button type="submit" class="btn-save">Lagre</button>
-    </form>`;
+    <div class="card-teams">${t1} mot ${t2}</div>
+    <div class="score-picker">
+      <div class="picker-row">
+        <span class="picker-name">${t1}</span>
+        <div class="picker-btns" data-team="1">${btns}</div>
+      </div>
+      <div class="picker-row">
+        <span class="picker-name">${t2}</span>
+        <div class="picker-btns" data-team="2">${btns}</div>
+      </div>
+      <button class="btn-save" disabled>Lagre resultat</button>
+    </div>`;
 
-  div.querySelector('.score-form').addEventListener('submit', e => {
-    e.preventDefault();
-    const s1 = parseInt(e.target.s1.value);
-    const s2 = parseInt(e.target.s2.value);
+  let s1 = null, s2 = null;
+  const saveBtn = div.querySelector('.btn-save');
 
-    if (isNaN(s1) || isNaN(s2))           { alert('Fyll inn poeng for begge lag.'); return; }
-    if (s1 === s2)                         { alert('Resultatet kan ikke være uavgjort.'); return; }
-    const winner = Math.max(s1, s2);
-    const loser  = Math.min(s1, s2);
-    if (winner < 11)                       { alert('Vinnerlaget må ha minst 11 poeng.'); return; }
-    if (winner > 11 && winner - loser < 2) { alert('Vinnerlaget må vinne med minst 2 poeng (f.eks. 12–10).'); return; }
+  const updateSave = () => { saveBtn.disabled = s1 === null || s2 === null; };
 
+  div.querySelector('[data-team="1"]').addEventListener('click', e => {
+    const btn = e.target.closest('.score-btn');
+    if (!btn) return;
+    div.querySelectorAll('[data-team="1"] .score-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    s1 = parseInt(btn.dataset.score);
+    updateSave();
+  });
+
+  div.querySelector('[data-team="2"]').addEventListener('click', e => {
+    const btn = e.target.closest('.score-btn');
+    if (!btn) return;
+    div.querySelectorAll('[data-team="2"] .score-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    s2 = parseInt(btn.dataset.score);
+    updateSave();
+  });
+
+  saveBtn.addEventListener('click', () => {
+    if (s1 === null || s2 === null) return;
+    if (s1 === s2) { alert('Resultatet kan ikke være uavgjort.'); return; }
+    if (Math.max(s1, s2) < 11) { alert('Vinnerlaget må ha minst 11 poeng.'); return; }
     submitScore(m.id, s1, s2);
     renderAdmin();
   });
