@@ -1,0 +1,18 @@
+# Avhengigheter
+node_modules/
+
+# Bygde filer
+dist/
+build/
+
+# Miljøvariabler
+.env
+.env.local
+
+# Editor-filer
+.vscode/
+.idea/
+*.DS_Store
+
+# Logger
+*.log
